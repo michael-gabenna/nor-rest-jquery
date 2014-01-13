@@ -25,7 +25,8 @@
     "url": "https://github.com/Sendanor/jquery-nor-rest/issues"
   },
   "devDependencies": {
-    "lint": "*"
+    "lint": "*",
+    "vows": "*"
   },
   "homepage": "https://github.com/Sendanor/jquery-nor-rest"
 }

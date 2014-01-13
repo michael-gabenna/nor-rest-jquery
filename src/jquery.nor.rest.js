@@ -1,3 +1,6 @@
+
+/*global jQuery, ref_copy_self $ */
+
 /** HTTP REST client plugin for jQuery */
 (function ( $ ) {
 	if( $.nor === undefined ) { $.nor = {}; }
@@ -5,6 +8,16 @@
 	/** Copy object */
 	function copy(o) {
 		return JSON.parse(JSON.stringify(o));
+	}
+
+	/** Resource constructor
+	 * @param obj {object} The resource object
+	 */
+	function Resource(obj) {
+		//console.log( 'at new Resource(): obj = ' + JSON.stringify(obj) );
+		var self = this;
+		obj = copy(obj);
+		ref_copy_self(self, obj);
 	}
 
 	/** 
@@ -21,15 +34,13 @@
 		if( from && (typeof from === 'object') && (from instanceof Array) ) {
 			//console.log( '^ from is Array: ' + JSON.stringify(from) );
 
-			throw new TypeError("Array support unimplemented.");
-
 			to = from.map(ref_copy);
 
 		// Convert objects with a property `$ref` as a function shortcut to `Resource.get(url, opts)`;
-		} else if( from && (typeof from === 'object') && (from['$ref'] !== undefined) ) {
+		} else if( from && (typeof from === 'object') && (from.$ref !== undefined) ) {
 			//console.log( '^ from is $ref-object: ' + JSON.stringify(from) );
 
-			var url = from['$ref'];
+			var url = from.$ref;
 			to = function(opts) {
 				return Resource.get(url, opts);
 			};
@@ -71,16 +82,6 @@
 		Object.keys(obj).forEach(function(key) {
 			self[key] = ref_copy(obj[key]);
 		});
-	}
-
-	/** Resource constructor
-	 * @param obj {object} The resource object
-	 */
-	function Resource(obj) {
-		//console.log( 'at new Resource(): obj = ' + JSON.stringify(obj) );
-		var self = this;
-		obj = copy(obj);
-		ref_copy_self(self, obj);
 	}
 
 	/** Get JSON REST resource at `url` and returns promise of an interface */
