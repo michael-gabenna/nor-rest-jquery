@@ -17,7 +17,8 @@ When `/api` returns:
 {
   "$ref": "http://zeta3-lts-local:3000/api",
   "profile": {
-    "$ref": "http://zeta3-lts-local:3000/api/profile"
+    "$ref": "http://zeta3-lts-local:3000/api/profile",
+	"username": "foo"
   }
 }
 ```
@@ -38,8 +39,12 @@ Then you can call `$.nor.rest.get(url[, params])` like this:
 $.nor.rest.get('/api').done(function(api) {
 	if(api.profile) {
 
+		// Any partial data that's available can be used here
+		console.log( api.profile.username );
+
 		// Get full user resource. Calling `api.profile()` is same as calling 
 		// `$.nor.rest.get('/api/profile')`.
+
 		api.profile().done(function(profile) {
 			console.log( profile );
 		});
