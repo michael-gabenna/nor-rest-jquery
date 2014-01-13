@@ -1,0 +1,31 @@
+{
+  "name": "jquery-nor-rest",
+  "version": "0.1.0",
+  "description": "jQuery REST client plugin for Sendanor REST APIs",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"lint": "node-lint src/ --config=lint.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Sendanor/jquery-nor-rest.git"
+  },
+  "keywords": [
+    "jquery",
+    "rest",
+    "get",
+    "post",
+    "client",
+    "resource"
+  ],
+  "author": "Jaakko-Heikki Heusala <jheusala@iki.fi>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sendanor/jquery-nor-rest/issues"
+  },
+  "devDependencies": {
+    "lint": "*"
+  },
+  "homepage": "https://github.com/Sendanor/jquery-nor-rest"
+}
