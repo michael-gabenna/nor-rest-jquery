@@ -1,8 +1,8 @@
 {
   "name": "jquery-nor-rest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "jQuery REST client plugin for Sendanor REST APIs",
-  "main": "src/index.js",
+  "main": "src/jquery.nor.rest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
 	"lint": "node-lint src/ --config=lint.json"

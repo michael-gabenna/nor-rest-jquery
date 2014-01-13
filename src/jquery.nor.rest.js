@@ -174,6 +174,10 @@
 	// Export as `$.nor.rest`
 	$.nor.rest = Resource;
 
-}( jQuery ));
+	if(typeof module !== 'undefined') {
+		module.exports = Resource;
+	}
+
+}( (typeof require !== 'undefined') ? require('jquery') : jQuery ));
 
 /* EOF */
