@@ -135,7 +135,7 @@
 			return res;
 		}, function fail_handler(err) {
 			//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
-			throw err;
+			return err;
 		});
 		return res;
 	};
