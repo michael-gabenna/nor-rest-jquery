@@ -2,8 +2,12 @@
 /*global jQuery, ref_copy_self $ */
 
 /** HTTP REST client plugin for jQuery */
-(function ( $ ) {
-	if( $.nor === undefined ) { $.nor = {}; }
+(function ( $, Q ) {
+
+	// Simply do nothing if Q is not available
+	if( Q === undefined ) {
+		Q = function noop(x) { return x; };
+	}
 
 	/** Copy object */
 	function copy(o) {
@@ -88,12 +92,12 @@
 	Resource.get = function(url, params) {
 		//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-		var jqxhr = $.ajax({
+		var jqxhr = Q($.ajax({
 		  dataType: "json",
 		  url: url,
 		  data: params,
 		  cache: false
-		});
+		}));
 
 		var res = jqxhr.then(function success_handler(data) {
 			//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
@@ -116,12 +120,12 @@
 	Resource.post = function(url, params) {
 		//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-		var jqxhr = $.ajax({
+		var jqxhr = Q($.ajax({
 		  type: 'POST',
 		  dataType: "json",
 		  url: url,
 		  data: params
-		});
+		}));
 
 		var res = jqxhr.then(function success_handler(data) {
 			//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
@@ -147,12 +151,12 @@
 		params = params || {};
 		params._method = 'DELETE';
 
-		var jqxhr = $.ajax({
+		var jqxhr = Q($.ajax({
 		  type: 'POST',
 		  dataType: "json",
 		  url: url,
 		  data: params
-		});
+		}));
 
 		var res = jqxhr.then(function success_handler(data) {
 			//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
@@ -172,12 +176,14 @@
 	};
 
 	// Export as `$.nor.rest`
+	if( $.nor === undefined ) { $.nor = {}; }
+
 	$.nor.rest = Resource;
 
 	if(typeof module !== 'undefined') {
 		module.exports = Resource;
 	}
 
-}( (typeof require !== 'undefined') ? require('jquery') : jQuery ));
+}( (typeof require !== 'undefined') ? require('jquery') : window.jQuery, (typeof require !== 'undefined') ? require('q') : window.Q ));
 
 /* EOF */
