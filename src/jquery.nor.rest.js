@@ -45,16 +45,19 @@
 			//console.log( '^ from is $ref-object: ' + JSON.stringify(from) );
 
 			var url = from.$ref;
-			to = function(opts) {
+			function To() { }
+			to = new To();
+
+			To.prototype.get = function(opts) {
 				return Resource.get(url, opts);
 			};
 
-			to.post = function(opts) {
+			To.prototype.post = function(opts) {
 				return Resource.post(url, opts);
 			};
-			to.update = to.post;
+			To.prototype.update = to.post;
 
-			to.del = function(opts) {
+			To.prototype.del = function(opts) {
 				return Resource.del(url, opts);
 			};
 
