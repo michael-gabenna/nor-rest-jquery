@@ -154,6 +154,9 @@
 		params = params || {};
 		params._method = 'DELETE';
 
+		//debug.log('url = ', url);
+		//debug.log('params = ', params);
+
 		var jqxhr = Q($.ajax({
 		  type: 'POST',
 		  dataType: "json",
