@@ -96,10 +96,10 @@
 		//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
 		var jqxhr = Q($.ajax({
-		  dataType: "json",
-		  url: url,
-		  data: params,
-		  cache: false
+			dataType: "json",
+			url: url,
+			data: params,
+			cache: false
 		}));
 
 		var res = jqxhr.then(function success_handler(data) {
@@ -123,11 +123,15 @@
 	Resource.post = function(url, params) {
 		//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
+		params = params || {};
+
 		var jqxhr = Q($.ajax({
-		  type: 'POST',
-		  dataType: "json",
-		  url: url,
-		  data: params
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json',
+			processData: false,
+			url: url,
+			data: JSON.stringify(params)
 		}));
 
 		var res = jqxhr.then(function success_handler(data) {
@@ -158,10 +162,12 @@
 		//debug.log('params = ', params);
 
 		var jqxhr = Q($.ajax({
-		  type: 'POST',
-		  dataType: "json",
-		  url: url,
-		  data: params
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json',
+			processData: false,
+			url: url,
+			data: JSON.stringify(params)
 		}));
 
 		var res = jqxhr.then(function success_handler(data) {
