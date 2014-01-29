@@ -5,7 +5,7 @@
 /*global ref_copy_self */
 
 var $ = require('jquery');
-var Q = require('q');
+var $Q = require('q');
 var copy = require('nor-data').copy;
 
 /** Resource constructor
@@ -91,12 +91,12 @@ function ref_copy_self(self, obj) {
 Resource.get = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-	var jqxhr = $.ajax({
+	var jqxhr = $Q($.ajax({
 		dataType: "json",
 		url: url,
 		data: params,
 		cache: false
-	});
+	}));
 
 	var res = jqxhr.then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
@@ -121,14 +121,14 @@ Resource.post = function(url, params) {
 
 	params = params || {};
 
-	var jqxhr = $.ajax({
+	var jqxhr = $Q($.ajax({
 		type: 'POST',
 		dataType: "json",
 		contentType: 'application/json',
 		processData: false,
 		url: url,
 		data: JSON.stringify(params)
-	});
+	}));
 
 	var res = jqxhr.then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
@@ -157,14 +157,14 @@ Resource.del = function(url, params) {
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
 
-	var jqxhr = $.ajax({
+	var jqxhr = $Q($.ajax({
 		type: 'POST',
 		dataType: "json",
 		contentType: 'application/json',
 		processData: false,
 		url: url,
 		data: JSON.stringify(params)
-	});
+	}));
 
 	var res = jqxhr.then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
