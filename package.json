@@ -25,7 +25,8 @@
     "url": "https://github.com/sendanor/jquery-nor-rest/issues"
   },
   "dependencies": {
-    "q": "*"
+    "q": "*",
+    "jquery": "1.*"
   },
   "devDependencies": {
     "lint": "*",
