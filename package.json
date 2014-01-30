@@ -1,6 +1,6 @@
 {
   "name": "jquery-nor-rest",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "jQuery REST client plugin for Sendanor REST APIs",
   "main": "src/jquery.nor.rest.js",
   "scripts": {

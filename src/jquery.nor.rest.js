@@ -91,14 +91,12 @@ function ref_copy_self(self, obj) {
 Resource.get = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-	var jqxhr = $Q($.ajax({
+	return $Q($.ajax({
 		dataType: "json",
 		url: url,
 		data: params,
 		cache: false
-	}));
-
-	var res = jqxhr.then(function success_handler(data) {
+	})).then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
 		if(data.$ref === undefined) {
 			//console.log('Warning! Resource from ' + url + ' did not have $ref property. Using ' + url + ' instead.' );
@@ -108,11 +106,10 @@ Resource.get = function(url, params) {
 		var res = new Resource(data);
 		//console.log('res.session is type of ' + typeof res.session);
 		return res;
-	}, function fail_handler(err) {
-		//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
-		throw err;
+	//}).fail(function fail_handler(err) {
+	//	//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
+	//	throw err;
 	});
-	return res;
 };
 
 /** POST to the JSON REST resource at `url`. Returns a promise of an interface. */
@@ -121,16 +118,14 @@ Resource.post = function(url, params) {
 
 	params = params || {};
 
-	var jqxhr = $Q($.ajax({
+	return $Q($.ajax({
 		type: 'POST',
 		dataType: "json",
 		contentType: 'application/json',
 		processData: false,
 		url: url,
 		data: JSON.stringify(params)
-	}));
-
-	var res = jqxhr.then(function success_handler(data) {
+	})).then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
 		if(data.$ref === undefined) {
 			//console.log('Warning! Resource from ' + url + ' did not have $ref property. Using ' + url + ' instead.' );
@@ -140,11 +135,10 @@ Resource.post = function(url, params) {
 		var res = new Resource(data);
 		//console.log('res.session is type of ' + typeof res.session);
 		return res;
-	}, function fail_handler(err) {
-		//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
-		return err;
+	//}, function fail_handler(err) {
+	//	//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
+	//	return err;
 	});
-	return res;
 };
 
 /** DELETE to the JSON REST resource at `url`. Returns a promise of an interface. */
@@ -157,16 +151,14 @@ Resource.del = function(url, params) {
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
 
-	var jqxhr = $Q($.ajax({
+	return $Q($.ajax({
 		type: 'POST',
 		dataType: "json",
 		contentType: 'application/json',
 		processData: false,
 		url: url,
 		data: JSON.stringify(params)
-	}));
-
-	var res = jqxhr.then(function success_handler(data) {
+	})).then(function success_handler(data) {
 		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
 		if(data.$ref === undefined) {
 			//console.log('Warning! Resource from ' + url + ' did not have $ref property. Using ' + url + ' instead.' );
@@ -176,11 +168,7 @@ Resource.del = function(url, params) {
 		var res = new Resource(data);
 		//console.log('res.session is type of ' + typeof res.session);
 		return res;
-	}, function fail_handler(err) {
-		//console.log( 'at jqxhr.fail(): err = ' + JSON.stringify( err ) );
-		throw err;
 	});
-	return res;
 };
 
 // Export as `$.nor.rest`
