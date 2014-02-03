@@ -27,7 +27,8 @@
   "dependencies": {
     "q": "*",
     "jquery": "1.*",
-    "nor-data": "*"
+    "nor-data": "*",
+    "nor-debug": ">= 0.1.15"
   },
   "devDependencies": {
     "lint": "*",
