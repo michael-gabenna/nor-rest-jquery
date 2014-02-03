@@ -7,6 +7,7 @@
 var $ = require('jquery');
 var $Q = require('q');
 var copy = require('nor-data').copy;
+var debug = require('nor-debug');
 
 /** Resource constructor
  * @param obj {object} The resource object
@@ -24,8 +25,6 @@ function Resource(obj) {
  */
 function ref_copy(from) {
 
-	function To() { }
-
 	//console.log( 'at ref_copy(): from = ' + JSON.stringify(from) );
 	//console.log( 'typeof from = ' + (typeof from) );
 
@@ -42,22 +41,13 @@ function ref_copy(from) {
 		//console.log( '^ from is $ref-object: ' + JSON.stringify(from) );
 
 		var url = from.$ref;
-		to = new To();
-
-		To.prototype.get = function(opts) {
-			return Resource.get(url, opts);
-		};
-
-		To.prototype.post = function(opts) {
-			return Resource.post(url, opts);
-		};
-		To.prototype.update = to.post;
-
-		To.prototype.del = function(opts) {
-			return Resource.del(url, opts);
-		};
+		to = new Resource.Partial();
 
 		ref_copy_self(to, from);
+
+		if(typeof to.$ref === undefined) {
+			debug.log('Warning! Partial object from '+ url +' does not have property $ref!');
+		}
 
 	// Convert normal objects
 	} else if( from && (typeof from === 'object') ) {
@@ -88,7 +78,7 @@ function ref_copy_self(self, obj) {
 }
 
 /** Get JSON REST resource at `url` and returns promise of an interface */
-Resource.get = function(url, params) {
+Resource.GET = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
 	return $Q($.ajax({
@@ -113,7 +103,7 @@ Resource.get = function(url, params) {
 };
 
 /** POST to the JSON REST resource at `url`. Returns a promise of an interface. */
-Resource.post = function(url, params) {
+Resource.POST = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
 	params = params || {};
@@ -142,7 +132,7 @@ Resource.post = function(url, params) {
 };
 
 /** DELETE to the JSON REST resource at `url`. Returns a promise of an interface. */
-Resource.del = function(url, params) {
+Resource.DEL = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
 	params = params || {};
@@ -170,6 +160,78 @@ Resource.del = function(url, params) {
 		return res;
 	});
 };
+
+// These are for coherency
+Resource.get    = debug.obsoleteMethod(Resource, 'get', 'GET');
+Resource.post   = debug.obsoleteMethod(Resource, 'post', 'POST');
+Resource.UPDATE = debug.obsoleteMethod(Resource, 'UPDATE', 'POST');
+Resource.update = debug.obsoleteMethod(Resource, 'update', 'POST');
+Resource.del    = debug.obsoleteMethod(Resource, 'del', 'DEL');
+Resource['delete'] = debug.obsoleteMethod(Resource, 'delete', 'DEL');
+
+/** Returns data from the server again */
+Resource.prototype.GET = function(params) {
+	var self = this;
+	debug.assert(self.$ref).typeOf('string');
+	return Resource.GET(self.$ref, params);
+};
+
+Resource.prototype.get = debug.obsoleteMethod(Resource.prototype, 'get', 'GET');
+
+/** Returns data from the server again */
+Resource.prototype.POST = function(params) {
+	var self = this;
+	debug.assert(self.$ref).typeOf('string');
+	return Resource.POST(self.$ref, params);
+};
+
+Resource.prototype.UPDATE = debug.obsoleteMethod(Resource.prototype, 'UPDATE', 'POST');
+Resource.prototype.update = debug.obsoleteMethod(Resource.prototype, 'update', 'POST');
+Resource.prototype.post   = debug.obsoleteMethod(Resource.prototype, 'post', 'POST');
+
+/** Returns data from the server again */
+Resource.prototype.DELETE = function(params) {
+	var self = this;
+	debug.assert(self.$ref).typeOf('string');
+	return Resource.DEL(self.$ref, params);
+};
+
+Resource.prototype.DEL = debug.obsoleteMethod(Resource.prototype, 'DEL', 'DELETE');
+Resource.prototype.del = debug.obsoleteMethod(Resource.prototype, 'del', 'DELETE');
+Resource.prototype['delete'] = debug.obsoleteMethod(Resource.prototype, 'delete', 'DELETE');
+
+/** Partial resources */
+function PartialResource() { }
+
+/** Refresh resource */
+PartialResource.prototype.GET = function(opts) {
+	debug.assert(this.$ref).typeOf('string');
+	return Resource.GET(this.$ref, opts);
+};
+
+PartialResource.prototype.get = debug.obsoleteMethod(PartialResource.prototype, 'get', 'GET');
+
+/** Update resource */
+PartialResource.prototype.POST = function(opts) {
+	debug.assert(this.$ref).typeOf('string');
+	return Resource.POST(this.$ref, opts);
+};
+
+PartialResource.prototype.update = debug.obsoleteMethod(PartialResource.prototype, 'update', 'POST');
+PartialResource.prototype.post   = debug.obsoleteMethod(PartialResource.prototype, 'post', 'POST');
+
+/** Delete resource */
+PartialResource.prototype.DEL = function(opts) {
+	debug.assert(this.$ref).typeOf('string');
+	return Resource.DEL(this.$ref, opts);
+};
+
+PartialResource.prototype.del       = debug.obsoleteMethod(PartialResource.prototype, 'del', 'DEL');
+PartialResource.prototype.DELETE    = debug.obsoleteMethod(PartialResource.prototype, 'DELETE', 'DEL');
+PartialResource.prototype['delete'] = debug.obsoleteMethod(PartialResource.prototype, 'delete', 'DEL');
+
+// Export PartialResource as Resource.Partial
+Resource.Partial = PartialResource;
 
 // Export as `$.nor.rest`
 if( $.nor === undefined ) { $.nor = {}; }
