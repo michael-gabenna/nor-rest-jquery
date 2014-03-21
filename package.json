@@ -1,6 +1,6 @@
 {
   "name": "jquery-nor-rest",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "jQuery REST client plugin for Sendanor REST APIs",
   "main": "src/jquery.nor.rest.js",
   "scripts": {
@@ -25,10 +25,10 @@
     "url": "https://github.com/sendanor/jquery-nor-rest/issues"
   },
   "dependencies": {
-    "q": "*",
-    "jquery": "1.*",
-    "nor-data": "*",
-    "nor-debug": ">= 0.1.15"
+    "q": ">= 1.0.1 < 1.1.0",
+    "jquery": ">= 1.11.0 <2.0.0",
+    "nor-data": ">= 0.0.4 <0.1.0",
+    "nor-debug": ">= 0.1.22 < 0.2.0"
   },
   "devDependencies": {
     "lint": "*",
