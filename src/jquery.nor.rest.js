@@ -169,6 +169,36 @@ Resource.update = debug.obsoleteMethod(Resource, 'update', 'POST');
 Resource.del    = debug.obsoleteMethod(Resource, 'del', 'DEL');
 Resource['delete'] = debug.obsoleteMethod(Resource, 'delete', 'DEL');
 
+/** PUT to the JSON REST resource at `url`. Returns a promise of an interface. */
+Resource.PUT = function(url, params) {
+	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
+
+	params = params || {};
+	params._method = 'PUT';
+
+	//debug.log('url = ', url);
+	//debug.log('params = ', params);
+
+	return $Q($.ajax({
+		type: 'POST',
+		dataType: "json",
+		contentType: 'application/json',
+		processData: false,
+		url: url,
+		data: JSON.stringify(params)
+	})).then(function success_handler(data) {
+		//console.log( 'at jqxhr.then(): data = ' + JSON.stringify( data ) );
+		if(data.$ref === undefined) {
+			//console.log('Warning! Resource from ' + url + ' did not have $ref property. Using ' + url + ' instead.' );
+			data.$ref = url;
+		}
+
+		var res = new Resource(data);
+		//console.log('res.session is type of ' + typeof res.session);
+		return res;
+	});
+};
+
 /** Returns data from the server again */
 Resource.prototype.GET = function(params) {
 	var self = this;
@@ -200,6 +230,13 @@ Resource.prototype.DEL = debug.obsoleteMethod(Resource.prototype, 'DEL', 'DELETE
 Resource.prototype.del = debug.obsoleteMethod(Resource.prototype, 'del', 'DELETE');
 Resource.prototype['delete'] = debug.obsoleteMethod(Resource.prototype, 'delete', 'DELETE');
 
+/** Returns data from the server again */
+Resource.prototype.PUT = function(params) {
+	var self = this;
+	debug.assert(self.$ref).typeOf('string');
+	return Resource.PUT(self.$ref, params);
+};
+
 /** Partial resources */
 function PartialResource() { }
 
@@ -219,6 +256,12 @@ PartialResource.prototype.POST = function(opts) {
 
 PartialResource.prototype.update = debug.obsoleteMethod(PartialResource.prototype, 'update', 'POST');
 PartialResource.prototype.post   = debug.obsoleteMethod(PartialResource.prototype, 'post', 'POST');
+
+/** PUT resource */
+PartialResource.prototype.PUT = function(opts) {
+	debug.assert(this.$ref).typeOf('string');
+	return Resource.PUT(this.$ref, opts);
+};
 
 /** Delete resource */
 PartialResource.prototype.DEL = function(opts) {
