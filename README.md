@@ -1,4 +1,4 @@
-jquery-nor-rest
+nor-rest-jquery
 ===============
 
 jQuery REST client plugin for Sendanor REST APIs
