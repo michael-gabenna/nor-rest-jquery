@@ -8,6 +8,8 @@ var $ = require('jquery');
 var $Q = require('q');
 var copy = require('nor-data').copy;
 var debug = require('nor-debug');
+var _url = require('url');
+var is = require('nor-is');
 
 /** Resource constructor
  * @param obj {object} The resource object
@@ -80,6 +82,29 @@ function ref_copy_self(self, obj) {
 /** Get JSON REST resource at `url` and returns promise of an interface */
 Resource.GET = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
+	var parsed_url = _url.parse(url, true);
+	if(parsed_url.search) {
+		delete parsed_url.search;
+	}
+
+	//debug.log('url = ', url);
+	//debug.log('params = ', params);
+	//debug.log('parsed_url = ', parsed_url);
+
+	// Remove overlapping keywords from url query parameters
+	if(is.obj(params)) {
+		var removed = false;
+		Object.keys(params).forEach(function(key) {
+			if(parsed_url.query.hasOwnProperty(key)) {
+				removed = true;
+				delete parsed_url.query[key];
+			}
+		});
+		if(removed) {
+			url = _url.format(parsed_url);
+		}
+		//debug.log('url (after) = ', url);
+	}
 
 	return $Q($.ajax({
 		dataType: "json",
