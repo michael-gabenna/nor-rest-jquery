@@ -36,7 +36,7 @@ function ref_copy(from) {
 	if( from && (typeof from === 'object') && (from instanceof Array) ) {
 		//console.log( '^ from is Array: ' + JSON.stringify(from) );
 
-		to = from.map(ref_copy);
+		to = ARRAY(from).map(ref_copy).valueOf();
 
 	// Convert objects with a property `$ref` as a function shortcut to `Resource.get(url, opts)`;
 	} else if( from && (typeof from === 'object') && (from.$ref !== undefined) ) {
@@ -74,7 +74,7 @@ function ref_copy(from) {
  */
 function ref_copy_self(self, obj) {
 	//console.log( 'at ref_copy_self(): self = ' + JSON.stringify(self) + ', obj = ' + JSON.stringify(obj) );
-	Object.keys(obj).forEach(function(key) {
+	ARRAY(Object.keys(obj)).forEach(function(key) {
 		self[key] = ref_copy(obj[key]);
 	});
 }
@@ -94,7 +94,7 @@ Resource.GET = function(url, params) {
 	// Remove overlapping keywords from url query parameters
 	if(is.obj(params)) {
 		var removed = false;
-		Object.keys(params).forEach(function(key) {
+		ARRAY(Object.keys(params)).forEach(function(key) {
 			if(parsed_url.query.hasOwnProperty(key)) {
 				removed = true;
 				delete parsed_url.query[key];
