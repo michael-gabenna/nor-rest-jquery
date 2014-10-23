@@ -10,6 +10,7 @@ var copy = require('nor-data').copy;
 var debug = require('nor-debug');
 var _url = require('url');
 var is = require('nor-is');
+var ARRAY = require('nor-array');
 
 /** Resource constructor
  * @param obj {object} The resource object
