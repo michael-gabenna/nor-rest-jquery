@@ -12,6 +12,18 @@ var _url = require('url');
 var is = require('nor-is');
 var ARRAY = require('nor-array');
 
+// FIXME: Implement this support for POST, DELETE, etc
+function replace_params(params) {
+	return function replace_params_(match, key) {
+		if(params && params.hasOwnProperty(key)) {
+			var value = params[key];
+			delete params[key];
+			return value;
+		}
+		return ':' + key;
+	};
+}
+
 /** Resource constructor
  * @param obj {object} The resource object
  */
@@ -82,6 +94,11 @@ function ref_copy_self(self, obj) {
 
 /** Get JSON REST resource at `url` and returns promise of an interface */
 Resource.GET = function(url, params) {
+
+	// Support for URL params
+	params = copy(params);
+	url = url.replace(/:([a-zA-Z0-9\_]+)/g, replace_params(params));
+
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 	var parsed_url = _url.parse(url, true);
 	if(parsed_url.search) {
@@ -93,9 +110,10 @@ Resource.GET = function(url, params) {
 	//debug.log('parsed_url = ', parsed_url);
 
 	// Remove overlapping keywords from url query parameters
-	if(is.obj(params)) {
+	var keys = is.obj(params) ? Object.keys(params) : [];
+	if(keys.length >= 1) {
 		var removed = false;
-		ARRAY(Object.keys(params)).forEach(function(key) {
+		ARRAY(keys).forEach(function(key) {
 			if(parsed_url.query.hasOwnProperty(key)) {
 				removed = true;
 				delete parsed_url.query[key];
@@ -132,7 +150,10 @@ Resource.GET = function(url, params) {
 Resource.POST = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-	params = params || {};
+	params = copy(params || {});
+
+	// Support for URL params
+	url = url.replace(/:([a-zA-Z0-9\_]+)/g, replace_params(params));
 
 	return $Q($.ajax({
 		type: 'POST',
@@ -161,8 +182,11 @@ Resource.POST = function(url, params) {
 Resource.DEL = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-	params = params || {};
+	params = copy(params || {});
 	params._method = 'DELETE';
+
+	// Support for URL params
+	url = url.replace(/:([a-zA-Z0-9\_]+)/g, replace_params(params));
 
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
@@ -199,8 +223,11 @@ Resource['delete'] = debug.obsoleteMethod(Resource, 'delete', 'DEL');
 Resource.PUT = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
-	params = params || {};
+	params = copy(params || {});
 	params._method = 'PUT';
+
+	// Support for URL params
+	url = url.replace(/:([a-zA-Z0-9\_]+)/g, replace_params(params));
 
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
