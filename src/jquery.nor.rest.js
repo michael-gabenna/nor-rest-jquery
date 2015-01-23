@@ -116,7 +116,7 @@ Resource.GET = function(url, params) {
 		delete parsed_url.search;
 	}
 
-	debug.log('parsed_url = ', parsed_url, ' (type of ', typeof parsed_url, ')');
+	//debug.log('parsed_url = ', parsed_url, ' (type of ', typeof parsed_url, ')');
 
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
