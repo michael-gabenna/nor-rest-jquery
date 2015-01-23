@@ -60,7 +60,7 @@ function ref_copy(from) {
 
 		ref_copy_self(to, from);
 
-		if(typeof to.$ref === undefined) {
+		if(!is.string(to.$ref)) {
 			debug.log('Warning! Partial object from '+ url +' does not have property $ref!');
 		}
 
@@ -95,15 +95,28 @@ function ref_copy_self(self, obj) {
 /** Get JSON REST resource at `url` and returns promise of an interface */
 Resource.GET = function(url, params) {
 
+	debug.assert(url).is('string');
+
 	// Support for URL params
 	params = copy(params);
+
+	if(url === 'undefined') {
+		throw new TypeError("Undefined as string!");
+	}
+
+	//debug.log('url = ', url, ' (type of ', typeof url, ')');
 	url = url.replace(/:([a-zA-Z0-9\_]+)/g, replace_params(params));
+	//debug.log('url = ', url, ' (type of ', typeof url, ')');
+
+	debug.assert(url).is('string');
 
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 	var parsed_url = _url.parse(url, true);
 	if(parsed_url.search) {
 		delete parsed_url.search;
 	}
+
+	debug.log('parsed_url = ', parsed_url, ' (type of ', typeof parsed_url, ')');
 
 	//debug.log('url = ', url);
 	//debug.log('params = ', params);
@@ -150,6 +163,8 @@ Resource.GET = function(url, params) {
 Resource.POST = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
+	debug.assert(url).is('string');
+
 	params = copy(params || {});
 
 	// Support for URL params
@@ -181,6 +196,8 @@ Resource.POST = function(url, params) {
 /** DELETE to the JSON REST resource at `url`. Returns a promise of an interface. */
 Resource.DEL = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
+
+	debug.assert(url).is('string');
 
 	params = copy(params || {});
 	params._method = 'DELETE';
@@ -223,6 +240,7 @@ Resource['delete'] = debug.obsoleteMethod(Resource, 'delete', 'DEL');
 Resource.PUT = function(url, params) {
 	//console.log(' at Resource.get(' + JSON.stringify(url) + ')' );
 
+	debug.assert(url).is('string');
 	params = copy(params || {});
 	params._method = 'PUT';
 
@@ -255,7 +273,7 @@ Resource.PUT = function(url, params) {
 /** Returns data from the server again */
 Resource.prototype.GET = function(params) {
 	var self = this;
-	debug.assert(self.$ref).typeOf('string');
+	debug.assert(self.$ref).is('string');
 	return Resource.GET(self.$ref, params);
 };
 
@@ -264,7 +282,7 @@ Resource.prototype.get = debug.obsoleteMethod(Resource.prototype, 'get', 'GET');
 /** Returns data from the server again */
 Resource.prototype.POST = function(params) {
 	var self = this;
-	debug.assert(self.$ref).typeOf('string');
+	debug.assert(self.$ref).is('string');
 	return Resource.POST(self.$ref, params);
 };
 
