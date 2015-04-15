@@ -70,3 +70,8 @@ $.nor.rest.get('/api').done(function(api) {
 	}
 });
 ```
+
+Commercial Support
+------------------
+
+You can buy commercial support from [Sendanor](http://sendanor.com/software).
